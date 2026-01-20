@@ -82,6 +82,48 @@
 
         <label for="isbn">ISBN</label>
         <input type="text" id="isbn" name="isbn" />
+
+        <label for="price_cost">Cost Price ($)</label>
+        <input
+          type="number"
+          id="price_cost"
+          name="price_cost"
+          step="0.01"
+          required
+          placeholder="0.00"
+        />
+
+        <label for="price_retail">Retail Price ($)</label>
+        <input
+          type="number"
+          id="price_retail"
+          name="price_retail"
+          step="0.01"
+          required
+          placeholder="0.00"
+        />
+
+        <label for="vendor">Vendor / Distributor</label>
+        <input
+          type="text"
+          id="vendor"
+          name="vendor"
+          placeholder="e.g. Simon & Schuster"
+        />
+
+        <label for="format">Format</label>
+        <select
+          id="format"
+          name="format"
+          style="width: 100%; padding: 8px; margin-top: 5px"
+        >
+          <option value="Paperback">Paperback</option>
+          <option value="Hardcover">Hardcore</option>
+          <option value="Mass Market">Mass Market</option>
+          <option value="Special Edition">Special Edition</option>
+          <option value="Audiobook">Audiobook</option>
+        </select>
+
         <button type="submit">Add Book</button>
       </form>
     </div>

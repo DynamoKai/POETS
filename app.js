@@ -22,13 +22,22 @@ app.get("/test-db", async (reg, res) => {
 app.post("/add-book", async (req, res) => {
   try {
     // 1. get the data from the form
-    const { title, author, quantity, isbn } = req.body;
+    const {
+      title,
+      author,
+      quantity,
+      isbn,
+      price_retail,
+      price_cost,
+      vendor,
+      format,
+    } = req.body;
 
     // 2. Insert into the database
     // To prevent hacking, use $1, $2, $3, ets. as placeholders for security
     const newBook = await pool.query(
-      "INSERT INTO books (title, author, quantity, isbn) VALUES ($1, $2, $3, $4)RETURNING *",
-      [title, author, quantity, isbn],
+      "INSERT INTO books (title, author, quantity, isbn, price_retail, price_cost) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *",
+      [title, author, quantity, isbn, price_retail, price_cost, vendor, format],
     );
 
     //3. send a response (current: sending new book data back)
