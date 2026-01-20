@@ -7,24 +7,29 @@
     <style>
       body {
         font-family: sans-serif;
-        max-width: 600px;
+        max-width: 800px;
         margin: 2rem auto;
-        padding: 01rem;
+        padding: 0 1rem;
       }
 
+      /* Form Styles */
+      .form-container {
+        background: #f9f9f9;
+        padding: 20px;
+        border-radius: 8px;
+        margin-bottom: 30px;
+      }
       label {
         display: block;
         margin-top: 10px;
         font-weight: bold;
       }
-
       input {
         width: 100%;
         padding: 8px;
         margin-top: 5px;
         box-sizing: border-box;
       }
-
       button {
         margin-top: 20px;
         padding: 10px 20px;
@@ -32,52 +37,115 @@
         color: white;
         border: none;
         cursor: pointer;
+        border-radius: 4px;
       }
-
       button:hover {
         background-color: #218838;
       }
+
+      /* Table Styles */
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+      }
+      th,
+      td {
+        border: 1px solid #ddd;
+        padding: 12px;
+        text-align: left;
+      }
+      th {
+        background-color: #333;
+        color: white;
+      }
+      tr:nth-child(even) {
+        background-color: #f2f2f2;
+      }
     </style>
   </head>
+
   <body>
-    <h1>📚 Add a New Book</h1>
-    <form action="/add-book" method="POST">
-      <label for="title">Title</label>
-      <input
-        type="text"
-        id="title"
-        name="title"
-        required
-        placeholder="e.g. The Great Gatsby"
-      />
+    <h1>📚 Book Inventory</h1>
 
-      <label for="author">Author</label>
-      <input
-        type="text"
-        id="author"
-        name="author"
-        required
-        placeholder="e.g. F. Scott Fitzgerald"
-      />
+    <div class="form-container">
+      <h3>Add a New Book</h3>
+      <form id="addBookForm">
+        <label for="title">Title</label>
+        <input type="text" id="title" name="title" required />
 
-      <label for="quantity">Quantity</label>
-      <input
-        type="number"
-        id="quantity"
-        name="quantity"
-        required
-        placeholder="e.g. 10"
-      />
+        <label for="author">Author</label>
+        <input typer="text" id="author" name="author" required />
 
-      <label for="isbn">ISBN</label>
-      <input
-        type="text"
-        id="isbn"
-        name="isbn"
-        placeholder="e.g. 978-0743273565"
-      />
+        <label for="quantity">Quantity</label>
+        <input type="number" id="quantity" name="quantity" required />
 
-      <button type="submit">Add Book</button>
-    </form>
+        <label for="isbn">ISBN</label>
+        <input type="text" id="isbn" name="isbn" />
+        <button type="submit">Add Book</button>
+      </form>
+    </div>
+
+    <h3>Current Inventory</h3>
+    <table id="booksTable">
+      <thead>
+        <tr>
+          <th>Title</th>
+          <th>Author</th>
+          <th>Qty</th>
+          <th>ISBN</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+
+    <script>
+      //1. Function to fetch and display books
+      async function loadBooks() {
+        const response = await fetch("/books");
+        const books = await response.json();
+
+        const tableBody = document.querySelector("#booksTable tbody");
+        tableBody.innerHTML = ""; // Clear current list
+
+        books.forEach((book) => {
+          const row = document.createElement("tr");
+          row.innerHTML = `
+                <td>${book.title}</td>
+                <td>${book.author}</td>
+                <td>${book.quantity}</td>
+                <td>${book.isbn}</td>
+                `;
+          tableBody.appendChild(row);
+        });
+      }
+
+      //2. Handle Form Submission (So page doesn't reload)
+      document
+        .getElementById("addBookForm")
+        .addEventListener("submit", async (e) => {
+          e.preventDefault(); //stop the form from causing a page reload
+
+          const formData = {
+            title: document.getElementById("title").value,
+            author: document.getElementById("author").value,
+            quantity: document.getElementById("quantity").value,
+            isbn: document.getElementById(isbn).value,
+          };
+
+          await fetch("/add-book", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(formData),
+          });
+
+          //Clear form and reload list
+          e.target.reset();
+          loadBooks();
+        });
+
+      //3. Load books when page opens
+      loadBooks();
+    </script>
   </body>
 </html>
