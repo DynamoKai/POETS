@@ -42,3 +42,13 @@ app.post("/add-book", async (req, res) => {
 app.listen(port, () => {
   console.log(`Server listening on port ${port}`);
 });
+
+app.get("/books", async (req, res) => {
+  try {
+    const allBooks = await pool.query("SELECT * FROM books ORDER BY id ASC");
+    res.json(allBooks.rows);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send("Server Error");
+  }
+});
